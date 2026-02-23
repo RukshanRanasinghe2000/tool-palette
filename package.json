@@ -7,16 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "smui-dark": "smui-theme compile public/smui-dark.css -i src/theme/dark",
-    "smui-light": "smui-theme compile public/smui.css -i src/theme",
+    "smui-dark": "smui-theme compile public/smui-dark.css -i src/theme/dark/index.scss",
+    "smui-light": "smui-theme compile public/smui.css -i src/theme/index.scss",
     "theme": "npm run smui-light && npm run smui-dark"
   },
   "devDependencies": {
-    "@smui/button": "^8.0.3",
-    "@smui/icon-button": "^8.0.3",
-    "@smui/top-app-bar": "^8.0.3",
+    "@skeletonlabs/skeleton": "^4.12.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "smui-theme": "^8.0.3",
     "svelte": "^5.45.2",
     "vite": "^7.3.1"
   },
