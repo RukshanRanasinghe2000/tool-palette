@@ -2,12 +2,13 @@
   let file = $state(null);
   let previewUrl = $state(null);
   let convertedUrl = $state(null);
+  let status = $state("idle");
 
-  let fromFormats = ["WEBP"];
-  let toFormats = ["PNG", "JPG", "WEBP", "GIF", "AVIF"];
+  let fromFormats = ["PNG", "JPG", "GIF", "AVIF"];
+  let toFormats = ["WEBP"];
 
-  let fromFormat = $state("WEBP");
-  let toFormat = $state("PNG");
+  let fromFormat = $state("JPG");
+  let toFormat = $state("WEBP");
   let fileInput;
 
   function handleFileUpload(event) {
@@ -16,39 +17,68 @@
       file = selectedFile;
       previewUrl = URL.createObjectURL(file);
       convertedUrl = null;
+      status = "idle";
     }
   }
 
   async function convertImage() {
     if (!file) return alert("Please upload an image");
 
+    status = "processing";
+
     const img = new Image();
     img.src = previewUrl;
 
-    await new Promise((resolve) => (img.onload = resolve));
+    try {
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
 
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
 
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
 
-    const mime = `image/${toFormat.toLowerCase()}`;
+      const mime = `image/${toFormat.toLowerCase() === 'jpg' ? 'jpeg' : toFormat.toLowerCase()}`;
 
-    canvas.toBlob(
-      (blob) => {
-        convertedUrl = URL.createObjectURL(blob);
-      },
-      mime,
-      0.9,
-    );
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            convertedUrl = URL.createObjectURL(blob);
+            status = "finished";
+          } else {
+            alert("Conversion failed");
+            status = "idle";
+          }
+        },
+        mime,
+        0.9,
+      );
+    } catch (error) {
+      console.error("Conversion error:", error);
+      alert("Error loading image for conversion");
+      status = "idle";
+    }
+  }
+
+  function downloadFile() {
+    if (!convertedUrl) return;
+    const link = document.createElement("a");
+    link.href = convertedUrl;
+    link.download = `converted-${file.name.split('.')[0]}.${toFormat.toLowerCase()}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   function removeFile() {
     file = null;
     previewUrl = null;
     convertedUrl = null;
+    status = "idle";
   }
 </script>
 
@@ -57,9 +87,9 @@
   <div class="hero-div">
     <div class="hero-section">
       <div class="hero-left">
-        <h1>WEBP Converter</h1>
+        <h1>{toFormat} Converter</h1>
         <p>
-          Convert your WEBP images to PNG, JPG, PDF, AVIF and more formats
+          Convert your PNG, JPG, PDF, AVIF images to {toFormat} and more formats
           online.
         </p>
       </div>
@@ -95,6 +125,7 @@
       onchange={(e) => handleFileUpload(e)}
       style="display: none"
     />
+    
     {#if !file}
       <button class="select-file-btn icon-btn" onclick={() => fileInput?.click()}>
         <i class="fa-solid fa-file"></i>Select File
@@ -102,40 +133,53 @@
     {/if}
 
     {#if file}
-  <div class="file-info">
-    <span class="file-icon">
-      <i class="fa-solid fa-file"></i>
-    </span>
-    <span class="file-name">{file.name}</span>
+      <div class="converter-row">
+        <!-- FILE NAME -->
+        <div class="file-part">
+          <i class="fa-solid fa-file"></i>
+          <span class="file-name">{file.name}</span>
+        </div>
 
-    <button
-      class="remove-btn"
-      onclick={removeFile}
-      aria-label="Remove selected file"
-      title="Remove file"
-    >
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-{/if}
+        <!-- CONVERT BUTTON -->
+         {#if status !== "finished"}
+            <button class="convert-action icon-btn" onclick={convertImage} disabled={status === "processing"}>
+              <i class="fa-solid fa-arrows-rotate"></i>
+              Convert to {toFormat}
+            </button>
+          {/if}
+        {#if status === "finished"}
+          <p>
+          <i class="fa-solid fa-arrows-rotate"></i>
+            Convert to {toFormat}
+          </p>
+        {/if}
 
-    <br />
+        <!-- STATUS BADGE -->
+        {#if status === "processing"}
+          <span class="status processing">
+            <i class="fa-solid fa-spinner fa-spin"></i> PROCESSING
+          </span>
+        {:else if status === "finished"}
+          <span class="status finished">
+            FINISHED
+          </span>
+        {/if}
 
-    {#if file}
-      <button class="icon-btn" onclick={() => convertImage()}><i class="fa fa-sync-alt mr-1"></i>Convert</button>
-    {/if}
+        <!-- DOWNLOAD -->
+        {#if status === "finished"}
+          <button class="download-btn icon-btn" onclick={downloadFile}>
+            <i class="fa-solid fa-download"></i> Download
+          </button>
+        {/if}
 
-    {#if convertedUrl}
-      <div class="result">
-        <h3>Converted Image</h3>
-        <img src={convertedUrl} alt="Converted" />
-        <br />
-        <a href={convertedUrl} download={"converted." + toFormat.toLowerCase()}>
-          <button>Download</button>
-        </a>
+        <!-- REMOVE -->
+        <button class="remove-btn" onclick={removeFile} aria-label="Remove file">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
     {/if}
   </div>
+ 
 
   <div class="info-sections-wrapper">
     <div class="two-column-cards">
@@ -227,7 +271,7 @@
 
   .hero-section {
     width: 100%;
-    max-width: 960px;
+    max-width: 1140px;
     min-height: 160px;
     padding: 30px;
     color: white;
@@ -265,31 +309,61 @@
     gap: 10px;
   }
 
-  .converter-card {
-    padding: 20px;
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-    text-align: center;
+  .converter-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding: 0.5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
   }
 
-  .preview img,
-  .result img {
-    max-width: 100%;
-    margin-top: 15px;
-    border-radius: 8px;
-  }
+.file-part {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
 
-  button {
-    padding: 10px 20px;
-    margin: 10px 5px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-  }
+.convert-action {
+  background: none;
+  border: none;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: .75rem;
+  font-weight: bold;
+}
+
+.status.processing {
+  background: orange !important;
+  color: white;
+}
+
+.status.finished {
+  background: #28a745 !important;
+  color: white;
+}
+
+.download-btn {
+  background: #28a745 !important;
+  color: white;
+  border-radius: 4px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
 
   button:hover {
     background-color: #0056b3;
@@ -369,15 +443,14 @@
   }
 
   button:not(.select-file-btn):not(.remove-btn) {
-    padding: 12px 24px;
+    padding: 10px 22px;
     margin: 10px 5px;
     border: none;
     border-radius: 6px;
     background-color: #c41e3a;
     color: white;
     cursor: pointer;
-    font-size: 1.5rem;
-    font-weight: 350;
+    font-weight: 500;
     transition: background-color 0.3s ease;
   }
 
@@ -387,7 +460,7 @@
 
   .info-sections-wrapper {
     width: 100%;
-    max-width: 960px;
+    max-width: 1140px;
     margin-top: 40px;
     padding: 20px;
     text-align: center;
@@ -477,6 +550,14 @@
     gap: 12px; 
   }
 
+  .file-name{
+    flex: 0 0 70%;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .hero-section {
@@ -494,4 +575,10 @@
       grid-template-columns: 1fr;
     }
   }
+
+  @media (min-width: 768px) {
+  .converter-row {
+    min-width: 1100px;
+  }
+}
 </style>

@@ -4,10 +4,10 @@
 
 <nav class="navbar">
   <div class="navbar-brand">
-    <span class="title">WebP Converter</span>
+    <span class="title">ToolPalatte</span>
   </div>
   <div class="navbar-menu">
-    <a use:link href="/">Converter</a>
+    <a use:link href="/">Tools</a>
     <a use:link href="/about">About Us</a>
   </div>
 </nav>
