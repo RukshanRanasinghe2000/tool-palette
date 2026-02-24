@@ -1,0 +1,35 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Uploaded / temp files
+uploads/
+temp/
+output/
+
+# Docker
+*.tar
+
+# ZIP files
+*.zip
+
+# IDEs
+.vscode/
+.idea/
+
+# Test files
+*.tmp
