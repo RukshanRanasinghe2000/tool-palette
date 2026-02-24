@@ -4,7 +4,7 @@
 
 <nav class="navbar">
   <div class="navbar-brand">
-    <span class="title">ToolPalatte</span>
+    <span class="title">ToolPalette</span>
   </div>
   <div class="navbar-menu">
     <a use:link href="/">Tools</a>
