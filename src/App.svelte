@@ -1,6 +1,7 @@
 <script>
   import Router from "svelte-spa-router";
   import Navbar from "./components/Navbar.svelte";
+  import Footer from "./components/Footer.svelte";
 
   import About from "./routes/About.svelte";
   import ImageConverter from "./routes/ImageConverter.svelte";
@@ -19,6 +20,8 @@
       <Router {routes} />
     </div>
   </main>
+  <Footer />
+
 </div>
 
 <style>
