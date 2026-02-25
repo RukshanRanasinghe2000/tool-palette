@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image
 from pdf2image import convert_from_bytes
+from fastapi.middleware.cors import CORSMiddleware
 import io
 
 app = FastAPI()
