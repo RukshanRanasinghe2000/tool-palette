@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Tool Palette Backend!"}
+
 @app.post("/convert-to-webp")
 async def convert_to_webp(file: UploadFile = File(...)):
     data = await file.read()
