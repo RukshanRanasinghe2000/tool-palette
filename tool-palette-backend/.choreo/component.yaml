@@ -1,0 +1,30 @@
+schemaVersion: 1.1
+version: "1.0.0"
+endpoints:
+  - name: tool-palette-backend
+    port: 8080
+    type: REST
+    networkVisibility: Public
+    context: /
+    service:
+      basePath: /
+      port: 8080
+    resources:
+      - path: /convert-to-webp
+        method: POST
+        request:
+          contentType: application/json
+          body:
+            type: object
+            properties:
+              fileUrl:
+                type: string
+                description: URL of the file to convert to WebP format
+        response:
+          contentType: application/json
+          body:
+            type: object
+            properties:
+              webpUrl:
+                type: string
+                description: URL of the converted WebP file
