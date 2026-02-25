@@ -6,6 +6,16 @@ import io
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],  
+)
+
 @app.post("/convert-to-webp")
 async def convert_to_webp(file: UploadFile = File(...)):
     data = await file.read()
