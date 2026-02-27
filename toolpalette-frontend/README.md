@@ -1,43 +1,90 @@
-# Svelte + Vite
+# ToolPalette Frontend
 
-This template should help get you started developing with Svelte in Vite.
+ToolPalette is a comprehensive collection of online tools designed to simplify your daily digital tasks. This frontend is built with Svelte 5 and Vite, providing a fast and responsive user experience.
 
-## Recommended IDE Setup
+## Screenshots
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+<div align="center">
+  <img src="docs/image1.png" alt="ToolPalette Overview" width="400"/>
+  <img src="docs/image2.png" alt="ToolPalette Feature" width="400"/>
+</div>
 
-## Need an official Svelte framework?
+---
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## Architecture Overview
 
-## Technical considerations
+The application follows a modular architecture designed for scalability and maintainability:
 
-**Why use this over SvelteKit?**
+- **Frontend Framework:** [Svelte 5](https://svelte.dev/) - Utilizing the latest Runes API for reactive state management.
+- **Build Tool:** [Vite](https://vitejs.dev/) - Ensuring ultra-fast development and optimized builds.
+- **UI Framework:** [Skeleton UI](https://www.skeleton.dev/) - A powerful UI toolkit for Svelte built with Tailwind CSS (configured for Svelte 5).
+- **Routing:** [svelte-spa-router](https://github.com/ItalyPaleAle/svelte-spa-router) - A lightweight, hash-based router for Single Page Applications.
+- **Architecture Pattern:** Feature-based routing with centralized services for business logic.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+---
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+## Folder Structure
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+```text
+toolpalette-frontend/
+├── docs/                # Project documentation and visual assets
+│   ├── image1.png       # Application screenshot
+│   └── image2.png       # Feature screenshot
+├── public/              # Static assets (images, icons, etc.)
+├── src/
+│   ├── assets/          # Static assets like SVGs
+│   ├── components/      # Reusable UI components (Navbar, Footer, etc.)
+│   ├── lib/             # Utility and shared components
+│   ├── routes/          # Page components defining application views
+│   │   ├── Home.svelte
+│   │   ├── About.svelte
+│   │   └── ImageConverter.svelte
+│   ├── services/        # Business logic and API interaction layers
+│   ├── theme/           # Application styling and themes
+│   ├── App.svelte       # Root component and route configuration
+│   ├── app.css          # Global styles
+│   └── main.js          # Main entry point
+├── package.json         # Project metadata and dependencies
+└── vite.config.js       # Vite build configuration
 ```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (Latest LTS recommended)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Navigate to the frontend directory:
+   ```bash
+   cd toolpalette-frontend
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Development
+
+Run the development server:
+```bash
+npm run dev
+```
+
+### Building for Production
+
+To create an optimized production build:
+```bash
+npm run build
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
