@@ -4,6 +4,7 @@
   let convertedUrl = $state(null);
   let status = $state("idle");
 
+import { convertImage as serviceConvertImage } from '../services/services';
   let fromFormats = ["PNG", "JPG", "GIF", "AVIF"];
   let toFormats = ["WEBP"];
 
@@ -25,41 +26,13 @@
     if (!file) return alert("Please upload an image");
 
     status = "processing";
-
-    const img = new Image();
-    img.src = previewUrl;
-
     try {
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0);
-
-      const mime = `image/${toFormat.toLowerCase() === 'jpg' ? 'jpeg' : toFormat.toLowerCase()}`;
-
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            convertedUrl = URL.createObjectURL(blob);
-            status = "finished";
-          } else {
-            alert("Conversion failed");
-            status = "idle";
-          }
-        },
-        mime,
-        0.9,
-      );
+      const blob = await serviceConvertImage(file);
+      convertedUrl = URL.createObjectURL(blob);
+      status = "finished";
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Error loading image for conversion");
+      alert("Error during conversion. Please try again.");
       status = "idle";
     }
   }
