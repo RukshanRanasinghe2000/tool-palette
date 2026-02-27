@@ -7,9 +7,5 @@ endpoints:
     type: REST
     networkVisibility: Public
     context: /
-    service:
-      basePath: /
-      port: 8080
-    resources:
-      - path: /convert-to-webp
-        method: POST
+    openapi:
+      enabled: true
