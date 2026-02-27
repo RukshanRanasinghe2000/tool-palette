@@ -11,4 +11,4 @@ endpoints:
       basePath: /
       port: 8080
     openapi:
-      enabled: true
+      filePath: openapi.yaml

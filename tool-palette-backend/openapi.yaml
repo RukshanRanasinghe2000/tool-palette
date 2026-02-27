@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Tool Palette Backend API
+  description: API for the Tool Palette application, providing various utility endpoints.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: General
+    description: General application endpoints
+  - name: Image Conversion
+    description: Endpoints for converting images
+paths:
+  /:
+    get:
+      tags:
+        - General
+      summary: Welcome Message
+      description: Returns a welcome message from the backend.
+      operationId: root
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Welcome to the Tool Palette Backend!"
+  /convert-to-webp:
+    post:
+      tags:
+        - Image Conversion
+      summary: Convert Image to WEBP
+      description: Converts an uploaded image or the first page of a PDF to WEBP format.
+      operationId: convertToWebp
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The image or PDF file to convert.
+        required: true
+      responses:
+        '200':
+          description: Successful Conversion
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation Error
