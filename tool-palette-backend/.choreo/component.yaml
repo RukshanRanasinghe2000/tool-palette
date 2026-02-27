@@ -10,5 +10,4 @@ endpoints:
     service:
       basePath: /
       port: 8080
-    openapi:
-      filePath: openapi.yaml
+    schemaFilePath: openapi.yaml
