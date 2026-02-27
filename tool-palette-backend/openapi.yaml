@@ -34,7 +34,7 @@ paths:
       tags:
         - Image Conversion
       summary: Convert Image to WEBP
-      description: Converts an uploaded image or the first page of a PDF to WEBP format.
+      description: Converts an uploaded image or the first page of a JPGE, PNG, AVIF, GIF to WEBP format.
       operationId: convertToWebp
       requestBody:
         content:
@@ -45,7 +45,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: The image or PDF file to convert.
+                  description: The image convert.
         required: true
       responses:
         '200':
