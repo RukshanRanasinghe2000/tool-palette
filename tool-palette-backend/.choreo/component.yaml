@@ -7,5 +7,8 @@ endpoints:
     type: REST
     networkVisibility: Public
     context: /
+    service:
+      basePath: /
+      port: 8080
     openapi:
       enabled: true
